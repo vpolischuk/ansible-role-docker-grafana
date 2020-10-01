@@ -4,11 +4,6 @@
     name: "{{ grafana_data_volume }}"
     state: present
 
-- name: Ensure network for grafana exists
-  docker_network:
-    name: "{{ grafana_network_name }}"
-    state: present
-
 - name: Create grafana container
   docker_container:
     name: "{{ grafana_container_name }}"
@@ -20,14 +15,8 @@
       GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password }}"
     volumes:
       - "{{ grafana_data_volume }}:/var/lib/grafana"
-    networks:
-      - name: "{{ grafana_network_name }}"
-    networks_cli_compatible: false
-  register: grafana_container
-
-- name: Template nginx http vhost config
-  template:
-    src: vhost.conf.j2
-    dest: "/etc/nginx/conf.d/{{ grafana_domain_name }}.conf"
-  notify:
-    - Reload nginx
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.grafana.rule: "Host(`{{ grafana_domain_name }}`)"
+      traefik.http.routers.grafana.tls: "true"
+      traefik.http.routers.grafana.tls.certresolver: "letsencrypt"

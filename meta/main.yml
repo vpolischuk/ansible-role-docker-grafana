@@ -55,4 +55,4 @@ galaxy_info:
 
 dependencies:
   - ansible-role-docker
-  - ansible-role-nginx
+  - ansible-role-docker-traefik

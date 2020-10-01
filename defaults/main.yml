@@ -1,9 +1,6 @@
 ---
 grafana_data_volume: grafana_data
-grafana_network_name: grafana
 grafana_container_name: grafana
 grafana_image_name: grafana/grafana:6.5.1
 grafana_domain_name: grafana.localdomain
-grafana_ssl_cert: "/etc/nginx/ssl/default.crt"
-grafana_ssl_key: "/etc/nginx/ssl/default.pem"
 grafana_admin_password: "{{ lookup('password', playbook_dir + '/credentials/' + inventory_hostname +'_grafana length=16') }}"
